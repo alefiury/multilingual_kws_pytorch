@@ -1,0 +1,99 @@
+pretrain:
+    epochs: 94
+    batch_size: 64
+    lr: 1e-3
+    warmup_rate: 0.2
+    num_workers: 8
+
+    early_stopping: false
+    patience: ${pretrain.epochs} # No early stopping (patience == epochs)
+
+    classes_num: 87
+
+    step_scheduler: true
+    mixed_precision: false
+
+    embedding_layer: "pre_training_output"
+
+    weights_output_dir: "pre_trained_weights"
+
+finetunning:
+    epochs: 120
+    batch_size: 64
+    lr: 1e-3
+    warmup_rate: 0.2
+    num_workers: 8
+
+    early_stopping: false
+    patience: ${pretrain.epochs} # No early stopping (patience == epochs)
+
+    classes_num: 3
+
+    step_scheduler: true
+    mixed_precision: false
+
+    embedding_layer: "tranfer_out"
+
+    weights_output_dir: "finetuned_weights"
+
+feature_extractor:
+    sample_rate: 16000
+    window_size: 480
+    hop_size: 320
+    mel_bins: 40
+    period: 1
+
+    fmin: 0
+    fmax: 8000
+
+    in_channels: 1
+
+data_augmentation:
+    spec_augment: false
+    freqm: 2 # SpecAugment
+    timem: 2 # SpecAugment
+    audio_augmentation: [
+        {
+            "name": "gain",
+            "min_gain_in_db": -18.0,
+            "max_gain_in_db": 6,
+            "p": 1.0
+        },
+        {
+            "name": "pitch_shift",
+            "min_semitones": -3,
+            "max_semitones": 3,
+            "p": 1.0
+        },
+        {
+            "name": "gaussian",
+            "min_amplitude": 0.0001,
+            "max_amplitude": 0.001,
+            "p": 1.0
+        },
+        {
+            "name": "shift",
+            "min_fraction": 0.0,
+            "max_fraction": 0.1,
+            "rollover": False,
+            "p": 1.0
+        }
+    ]
+
+models:
+    pretrained: true
+    encoder_model_name: efficientnet_b0
+    # encoder_model_name: efficientnetv2_rw_s
+    freeze_base: true
+    pretrained_checkpoint:
+    imagenet_pretrained: false
+
+data:
+    train_csv_path: data/train_df_2.csv
+    dev_csv_path: data/val_train_2.csv
+    test_csv_path:
+
+    path_column: 'path'
+    label_column: 'word'
+
+    output_dir: weights
