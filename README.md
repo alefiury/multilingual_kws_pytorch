@@ -6,3 +6,4 @@ This is an unofficial PyTorch implementation of [Few-Shot Keyword Spotting in An
 - [ ] Describe how to use the application
 - [ ] Add pretrained weights
 - [ ] Add finetuned example
+- [ ] Clean ```requirements```
